@@ -19,7 +19,7 @@ export const errorMiddleware = async (
         } 
         else {
             res.status(500).json({
-                error: error.message
+                errors: error.message
             });
         }
 }
