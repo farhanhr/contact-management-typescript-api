@@ -14,7 +14,7 @@ export type UserResponse = {
 
 export function toUserResponse(user: User): UserResponse {
     return {
-        name: user.name,
         username: user.username,
+        name: user.name,
     }
 }

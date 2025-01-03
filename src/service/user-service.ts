@@ -16,7 +16,7 @@ export class UserService {
             }
         });
 
-        if (!totalUserWithSameUsername) {
+        if (totalUserWithSameUsername != 0) {
             throw new ResponseError(400, "Username has been taken");
         }
 
