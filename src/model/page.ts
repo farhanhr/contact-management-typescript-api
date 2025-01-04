@@ -6,5 +6,5 @@ export type Paging = {
 
 export  type Pageable<T> = {
     data: Array<T>;
-    pagging: Paging;
+    paging: Paging;
 }

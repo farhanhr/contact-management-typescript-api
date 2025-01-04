@@ -128,7 +128,7 @@ export class ContactService {
 
         return {
             data: contact.map(contact => toContactResponse(contact)),
-            pagging: {
+            paging: {
                 current_page: searchRequest.page,
                 total_page: Math.ceil(total / searchRequest.size),
                 size: searchRequest.size    
