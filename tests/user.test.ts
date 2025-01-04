@@ -179,3 +179,38 @@ describe('PATCH /api/users/current', () => {
         expect(await bcrypt.compare("jacky123", user.password)).toBe(true);
     });
 });
+
+describe('DELETE /api/users/current', () => {
+    beforeEach(async () => {
+        await UserTest.create();
+    });
+
+    afterEach(async () => {
+        await UserTest.delete();
+    });
+
+    it('should be able to logout', async () => {
+        const response = await supertest(server)
+            .delete("/api/users/current")
+            .set("X-API-TOKEN", "test");
+
+        logger.debug(response.body);
+
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBe("Ok");
+
+        const user = await UserTest.get();
+        expect(user.token).toBe(null);
+    });
+
+    it('should reject logout if token invalid', async () => {
+        const response = await supertest(server)
+            .delete("/api/users/current")
+            .set("X-API-TOKEN", "invalid token");
+
+        logger.debug(response.body);
+
+        expect(response.status).toBe(401);
+        expect(response.body.errors).toBeDefined();
+    });
+});
