@@ -4,7 +4,6 @@ import { ContactValidation } from "../validation/contact-validation";
 import { Validation } from "../validation/validation";
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
-import { UserValidation } from "../validation/user-validation";
 
 export class ContactService {
 
@@ -46,7 +45,7 @@ export class ContactService {
     }
 
     static async update(user: User, request: UpdateContactRequest): Promise<ContactResponse> {
-        const updateRequest = Validation.validate(UserValidation.UPDATE, request);
+        const updateRequest = Validation.validate(ContactValidation.UPDATE, request);
         
         await this.checkContactMustExist(user.username, updateRequest.id);
 
