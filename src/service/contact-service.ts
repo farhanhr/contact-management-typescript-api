@@ -3,6 +3,7 @@ import { ContactResponse, CreateContactRequest, toContactResponse } from "../mod
 import { ContactValidation } from "../validation/contact-validation";
 import { Validation } from "../validation/validation";
 import { prismaClient } from "../application/database";
+import { logger } from "../application/logging";
 
 export class ContactService {
 
