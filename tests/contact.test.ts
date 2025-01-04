@@ -163,4 +163,15 @@ describe('DELETE /api/contacts/:contactId', () => {
         expect(response.status).toBe(200);
         expect(response.body.data).toBe("Ok");
     });
+
+    it('should reject to remove contact if contact is not found', async () => {
+        const contact = await ContactTest.get();
+        const response = await supertest(server)
+            .delete(`/api/contacts/${contact.id + 1}`)
+            .set("X-API-TOKEN", "test");
+
+        logger.debug(response.body);
+        expect(response.status).toBe(404);
+        expect(response.body.errors).toBeDefined();
+    });
 });
