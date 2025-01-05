@@ -135,3 +135,102 @@ describe('POST /api/contacts/:contactsId/addresses/:addressId', () => {
 
     });
 });
+
+describe('PUT /api/contacts/:contactId/addresses/:addressId', () => {
+    beforeEach(async () => {
+        await UserTest.create();
+        await ContactTest.create();
+        await AddressTest.create();
+    });
+
+    afterEach(async () => {
+        await AddressTest.deleteAll();
+        await ContactTest.deleteAll();
+        await UserTest.delete();
+    });
+
+    it('should be able to update address', async () => {
+        const contact = await ContactTest.get();
+        const address = await AddressTest.get();
+
+        const response = await supertest(server)
+            .put(`/api/contacts/${contact.id}/addresses/${address.id}`)
+            .set("X-API-TOKEN", "test")
+            .send({
+                street: "Jalan Wanderer no.33",
+                    city: "Kota El Scaro",
+                    province: "Provinsi Witeka",
+                    country: "Diomedea",
+                    postal_code: "68173"
+            });
+
+        logger.debug(response.body);
+        expect(response.status).toBe(200);
+        expect(response.body.data.id).toBe(address.id);
+        expect(response.body.data.street).toBe("Jalan Wanderer no.33");
+        expect(response.body.data.city).toBe("Kota El Scaro");
+        expect(response.body.data.province).toBe("Provinsi Witeka");
+        expect(response.body.data.country).toBe("Diomedea");
+        expect(response.body.data.postal_code).toBe("68173");
+    });
+
+    it('should reject to update address if request field is invalid', async () => {
+        const contact = await ContactTest.get();
+        const address = await AddressTest.get();
+
+        const response = await supertest(server)
+            .put(`/api/contacts/${contact.id}/addresses/${address.id}`)
+            .set("X-API-TOKEN", "test")
+            .send({
+                street: "Jalan Wanderer no.33",
+                    city: "Kota El Scaro",
+                    province: "Provinsi Witeka",
+                    country: "",
+                    postal_code: ""
+            });
+
+        logger.debug(response.body);
+        expect(response.status).toBe(400);
+        expect(response.body.errors).toBeDefined();
+    });
+
+    it('should reject to update address if addressId is not found', async () => {
+        const contact = await ContactTest.get();
+        const address = await AddressTest.get();
+
+        const response = await supertest(server)
+            .put(`/api/contacts/${contact.id}/addresses/${address.id + 1}`)
+            .set("X-API-TOKEN", "test")
+            .send({
+                street: "Jalan Wanderer no.33",
+                    city: "Kota El Scaro",
+                    province: "Provinsi Witeka",
+                    country: "Toram",
+                    postal_code: "98123"
+            });
+
+        logger.debug(response.body);
+        expect(response.status).toBe(404);
+        expect(response.body.errors).toBeDefined();
+    });
+
+    it('should reject to update address if contact is not found', async () => {
+        const contact = await ContactTest.get();
+        const address = await AddressTest.get();
+
+        const response = await supertest(server)
+            .put(`/api/contacts/${contact.id + 1}/addresses/${address.id}`)
+            .set("X-API-TOKEN", "test")
+            .send({
+                street: "Jalan Wanderer no.33",
+                    city: "Kota El Scaro",
+                    province: "Provinsi Witeka",
+                    country: "Toram",
+                    postal_code: "98123"
+            });
+
+        logger.debug(response.body);
+        expect(response.status).toBe(404);
+        expect(response.body.errors).toBeDefined();
+    });
+});
