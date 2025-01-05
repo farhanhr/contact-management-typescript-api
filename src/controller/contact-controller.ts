@@ -1,6 +1,6 @@
 import { Response, NextFunction } from "express";
 import { UserRequest } from "../type/user-request";
-import { CreateContactRequest, SearchContactRequest, UpdateContactRequest } from "../model/contact.model";
+import { CreateContactRequest, SearchContactRequest, UpdateContactRequest } from "../model/contact-model";
 import { ContactService } from "../service/contact-service";
 
 export class ContactController {
